@@ -28,5 +28,10 @@ export default {
 header {
   display: flex;
   justify-content: space-between;
+  background-color: black;
+  padding: 1rem;
+  .name {
+    color: red;
+  }
 }
 </style>

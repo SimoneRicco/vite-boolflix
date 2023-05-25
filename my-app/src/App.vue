@@ -19,30 +19,35 @@ export default {
   methods: {
     getFilms() {
       axios
-        .get("https://api.themoviedb.org/3/search/tv", {
+        .get("https://api.themoviedb.org/3/search/movie", {
           params: {
             api_key: "5272734d98b33c8b70a6cd3f32c035cd",
             query: this.store.searchStr,
-            //page: 1,
-            //include_adult: false,
-            //language: "en",
           },
         })
         .then((response) => (this.store.filmList = response.data.results));
     },
-    searchQuery() {
-      this.getFilms();
+    getSeries() {
+      axios
+        .get("https://api.themoviedb.org/3/search/tv", {
+          params: {
+            api_key: "5272734d98b33c8b70a6cd3f32c035cd",
+            query: this.store.searchStr,
+          },
+        })
+        .then((response) => (this.store.seriesList = response.data.results));
     },
   },
   created() {
     this.getFilms();
+    this.getSeries();
   },
 };
 </script>
 
 <template>
   <main>
-    <Header @searching="searchQuery"></Header>
+    <Header @searching="this.getFilms()"></Header>
     <FilmList></FilmList>
   </main>
 </template>

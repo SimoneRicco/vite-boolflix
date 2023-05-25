@@ -1,59 +1,82 @@
 <script>
 import { store } from "../store";
 import "@fortawesome/fontawesome-free/css/all.css";
+import LangFlag from "vue-lang-code-flags";
 export default {
   data() {
     return {
       store,
     };
   },
+  components: {
+    LangFlag,
+  },
   props: {
-    cardData: Object,
+    cardImg: String,
+    cardTitle: String,
+    cardOriginalTitle: String,
+    cardOriginalLanguage: String,
+    cardRating: Number,
   },
   methods: {
     getRatingFive(toConvert) {
       return Math.floor((toConvert * 5) / 10);
     },
+    // getStars(num) {
+    //   let toReturn = "";
+    //   for (let i = 0; i < 5; i++) {
+    //     if (num <= i) {
+    //       toReturn += '<font-awesome-icon icon="fa-solid fa-star" />';
+    //     } else {
+    //       toReturn += '<font-awesome-icon icon="fa-regular fa-star" />';
+    //     }
+    //   }
+    //   return toReturn;
+    // },
   },
 };
 </script>
 
 <template>
-  <div class="card" v-if="cardData.backdrop_path != null">
+  <div class="card" v-if="cardImg != null">
+    <!-- Backdrop -->
     <img
-      :src="
-        cardData.backdrop_path != null
-          ? 'https://image.tmdb.org/t/p/w342/' + cardData.backdrop_path
-          : ''
-      "
+      :src="cardImg != null ? 'https://image.tmdb.org/t/p/w342/' + cardImg : ''"
       alt=""
     />
-    <div class="title">Nome: {{ cardData.name }}</div>
-    <div class="original-title">
-      Nome originale:{{ cardData.original_name }}
-    </div>
+    <div class="title">Nome: {{ cardTitle }}</div>
+    <div class="original-title">Nome originale:{{ cardOriginalTitle }}</div>
     <div class="original-language">
-      Lingua originale:{{ cardData.original_language }}
+      Lingua originale:{{ cardOriginalLanguage }}
     </div>
     <div class="vote_average">
-      Valutazione: <font-awesome-icon icon="fa-solid fa-star" />
-      {{ getRatingFive(cardData.vote_average) }}/5
+      Valutazione:
+      <template v-for="index in 5">
+        <template v-if="index <= getRatingFive(cardRating)">
+          <font-awesome-icon
+            class="star"
+            icon="fa-solid fa-star"
+            :key="index"
+          />
+        </template>
+        <template v-else>
+          <font-awesome-icon
+            class="star"
+            icon="fa-regular fa-star"
+            :key="index"
+          />
+        </template>
+      </template>
     </div>
-    <img
-      :src="
-        cardData.origin_country[0] != undefined
-          ? 'https://flagsapi.com/' +
-            cardData.origin_country[0] +
-            '/flat/64.png'
-          : ''
-      "
-      alt="Immagine"
-    />
+    <lang-flag :iso="cardOriginalLanguage" />
   </div>
 </template>
 
 <style lang="scss" scoped>
 .card {
   border: 1px solid black;
+  .star {
+    color: rgb(212, 212, 42);
+  }
 }
 </style>
