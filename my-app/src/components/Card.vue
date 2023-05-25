@@ -39,44 +39,107 @@ export default {
 
 <template>
   <div class="card" v-if="cardImg != null">
-    <!-- Backdrop -->
-    <img
-      :src="cardImg != null ? 'https://image.tmdb.org/t/p/w342/' + cardImg : ''"
-      alt=""
-    />
-    <div class="title">Nome: {{ cardTitle }}</div>
-    <div class="original-title">Nome originale:{{ cardOriginalTitle }}</div>
-    <div class="original-language">
-      Lingua originale:{{ cardOriginalLanguage }}
+    <div class="inner-card">
+      <div class="card-front">
+        <img
+          :src="
+            cardImg != null ? 'https://image.tmdb.org/t/p/w342/' + cardImg : ''
+          "
+          alt=""
+        />
+      </div>
+      <div class="card-back">
+        <ul>
+          <li><span class="title">Nome: </span>{{ cardTitle }}</li>
+          <li>
+            <span class="title">Nome originale: </span>{{ cardOriginalTitle }}
+          </li>
+          <li>
+            <span class="title">Lingua originale: </span
+            ><lang-flag :iso="cardOriginalLanguage" />{{ cardOriginalLanguage }}
+          </li>
+          <li>
+            <span class="title">Valutazione: </span
+            ><template v-for="index in 5">
+              <template v-if="index <= getRatingFive(cardRating)">
+                <font-awesome-icon
+                  class="star"
+                  icon="fa-solid fa-star"
+                  :key="index"
+                />
+              </template>
+              <template v-else>
+                <font-awesome-icon
+                  class="star"
+                  icon="fa-regular fa-star"
+                  :key="index"
+                />
+              </template>
+            </template>
+          </li>
+        </ul>
+      </div>
     </div>
-    <div class="vote_average">
-      Valutazione:
-      <template v-for="index in 5">
-        <template v-if="index <= getRatingFive(cardRating)">
-          <font-awesome-icon
-            class="star"
-            icon="fa-solid fa-star"
-            :key="index"
-          />
-        </template>
-        <template v-else>
-          <font-awesome-icon
-            class="star"
-            icon="fa-regular fa-star"
-            :key="index"
-          />
-        </template>
-      </template>
-    </div>
-    <lang-flag :iso="cardOriginalLanguage" />
   </div>
 </template>
 
 <style lang="scss" scoped>
 .card {
-  border: 1px solid black;
+  .title {
+    font-weight: bold;
+    font-size: 1.1rem;
+  }
   .star {
     color: rgb(212, 212, 42);
   }
+  ul {
+    height: 30%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    list-style: none;
+  }
+}
+/* Flip card*/
+.card {
+  background-color: transparent;
+  width: 342px;
+  height: 513px;
+  perspective: 1000px;
+}
+
+.inner-card {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  transition: transform 0.6s;
+  transform-style: preserve-3d;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+}
+
+.card:hover .inner-card {
+  transform: rotateY(180deg);
+}
+
+.card-front,
+.card-back {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+}
+
+.card-front {
+  background-color: #bbb;
+  color: black;
+}
+
+.card-back {
+  background-color: black;
+  color: white;
+  transform: rotateY(180deg);
+  padding-top: 2rem;
 }
 </style>

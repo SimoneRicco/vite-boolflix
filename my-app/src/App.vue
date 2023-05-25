@@ -37,17 +37,17 @@ export default {
         })
         .then((response) => (this.store.seriesList = response.data.results));
     },
-  },
-  created() {
-    this.getFilms();
-    this.getSeries();
+    getAll() {
+      this.getFilms();
+      this.getSeries();
+    },
   },
 };
 </script>
 
 <template>
   <main>
-    <Header @searching="this.getFilms()"></Header>
+    <Header @searching="this.getAll()"></Header>
     <FilmList></FilmList>
   </main>
 </template>
